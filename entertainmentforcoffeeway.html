@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Развлечения пока ждете</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+            color: #4b3621;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 20px;
+            min-height: 100vh;
+            background-image: url('coffee-beans-levitate-white-background.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        h1 {
+            color: #8b5e3b;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            margin-bottom: 10px;
+            background-color: transparent !important;
+        }
+
+        .section {
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 30px;
+            padding: 15px;
+            background: rgba(255, 248, 225, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        button {
+            background-color: #8b5e3b;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #6a4c29;
+        }
+
+        img {
+            max-width: 70%;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .fun-correct {
+            color: green;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .fun-wrong {
+            color: red;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* Coffee Beans Catcher Game Styling */
+        #coffee-game {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            width: 100%;
+            height: 300px;
+            background: #f7f7f7;
+            border-radius: 8px;
+        }
+
+        #catcher {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            width: 60px;
+            height: 60px;
+            background-color: brown;
+            border-radius: 50%;
+            transform: translateX(-50%);
+        }
+
+        .coffee-bean {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-color: #4b3621;
+            border-radius: 50%;
+            animation: fall 2s linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                top: -50px;
+            }
+            100% {
+                top: 300px;
+            }
+        }
+
+        /* Modal styling */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 90%;
+            background: #fff8e1;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            z-index: 1000;
+            text-align: center;
+        }
+
+        .modal img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .modal p {
+            color: #4b3621;
+        }
+
+        .modal .close-btn {
+            background: #8b5e3b;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 999;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Добро пожаловать в наше кафе!</h1>
+    <img class="logo" src="resized_logo-transformed.png" alt="Логотип кафе">
+
+    <!-- Trivia Section -->
+    <div class="section">
+        <h2>Интересный факт о кофе</h2>
+        <button onclick="showTrivia()">Показать факт</button>
+    </div>
+
+    <!-- Jokes Section -->
+    <div class="section">
+        <h2>Шутка про кофе</h2>
+        <button onclick="showJoke()">Показать шутку</button>
+    </div>
+
+    <!-- Seasonal Menu Section -->
+    <div class="section">
+        <h2>Сезонное меню</h2>
+        <button onclick="showSeasonalMenu()">Показать меню</button>
+    </div>
+
+    <!-- Coffee Brewing Game Section (Cappuccino Steps) -->
+    <div class="section">
+        <h2>Приготовьте свою чашку капучино!</h2>
+        <div id="game-container">
+            <p>Кликайте на шаги для приготовления капучино в правильном порядке!</p>
+            <div>
+                <button id="step-1" onclick="brewCoffee(1)">Приготовить эспрессо</button>
+                <button id="step-2" onclick="brewCoffee(2)">Пробить молоко</button>
+                <button id="step-3" onclick="brewCoffee(3)">Добавить молоко в эспрессо</button>
+                <button id="step-4" onclick="brewCoffee(4)">Добавить молочную пенку</button>
+                <button id="step-5" onclick="brewCoffee(5)">Посыпать какао (по желанию)</button>
+            </div>
+            <p id="message"></p>
+        </div>
+    </div>
+
+    <!-- Coffee Beans Catcher Game Section -->
+    <div class="section">
+        <h2>Поймайте кофейные зерна!</h2>
+        <div id="coffee-game">
+            <div id="catcher"></div>
+        </div>
+        <p id="game-message">Зерна пойманы: 0</p>
+    </div>
+
+    <!-- Modal structure -->
+    <div class="overlay" id="overlay"></div>
+    <div class="modal" id="modal">
+        <p id="modal-content"></p>
+        <button class="close-btn" onclick="closeModal()">Закрыть</button>
+    </div>
+
+    <script>
+        // Trivia and jokes arrays
+        const triviaList = [
+            "Кофе был открыт козами! Пастух заметил, что его козы стали более энергичными после того, как съели ягоды кофе.",
+            "Самый дорогой кофе в мире называется 'Копи Лювак'. Его производят, ферментируя зерна в желудке зверька — мусанга.",
+            "Эспрессо изобрели в Италии в начале 20 века.",
+            "Кофе — это второй по популярности напиток в мире после воды!",
+            "Каждый день в мире выпивается более 2,25 миллиарда чашек кофе."
+        ];
+
+        const jokeList = [
+            "Почему кофе никогда не шутит про сахар? Потому что это было бы слишком сладко!",
+            "Что говорит кофе, когда оно заканчивается? 'До капли последней!'",
+            "Почему капучино всегда улыбается? Потому что у него пенка в порядке!",
+            "Как кофе приветствует своих друзей? 'Эй, сваримся позже!'"
+        ];
+
+        // Show trivia in modal
+        function showTrivia() {
+            const randomTrivia = triviaList[Math.floor(Math.random() * triviaList.length)];
+            showModal(randomTrivia);
+        }
+
+        // Show joke in modal
+        function showJoke() {
+            const randomJoke = jokeList[Math.floor(Math.random() * jokeList.length)];
+            showModal(randomJoke);
+        }
+
+        // Show modal
+        function showModal(content) {
+            document.getElementById('modal-content').innerHTML = content;
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('modal').style.display = 'block';
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // Show seasonal menu image in modal
+        function showSeasonalMenu() {
+            const seasonalMenuImage = '<img src="photo_2025-01-15_20-15-43.jpg" alt="Сезонное меню">'; // Replace with actual image path
+            showModal(seasonalMenuImage);
+        }
+
+        // Coffee brewing game logic
+        let cappuccinoSteps = [1, 2, 3, 4, 5];
+        let currentStep = 0;
+
+        function brewCoffee(step) {
+            const messageEl = document.getElementById("message");
+
+            // Reset previous animations
+            messageEl.classList.remove("fun-correct", "fun-wrong");
+
+            if (step === cappuccinoSteps[currentStep]) {
+                currentStep++;
+                messageEl.innerHTML = `<span class="fun-correct">Класс! Вы сделали это правильно!</span>`;
+                if (currentStep === cappuccinoSteps.length) {
+                    messageEl.innerHTML = `<span class="fun-correct">Капучино готово! Наслаждайтесь!</span>`;
+                }
+            } else {
+                messageEl.innerHTML = `<span class="fun-wrong">Ой, это не то! Попробуйте ещё раз!</span>`;
+            }
+        }
+
+        // Coffee Bean Catcher Game logic
+        let beansCaught = 0;
+        const catcher = document.getElementById("catcher");
+        let coffeeBeans = [];
+
+        function startCoffeeGame() {
+            setInterval(() => {
+                const coffeeBean = document.createElement("div");
+                coffeeBean.classList.add("coffee-bean");
+
+                const leftPosition = Math.random() * 80 + 10;
+                coffeeBean.style.left = `${leftPosition}%`;
+
+                document.getElementById("coffee-game").appendChild(coffeeBean);
+
+                coffeeBean.addEventListener("animationiteration", () => {
+                    coffeeBean.remove();
+                });
+
+                coffeeBean.addEventListener("click", () => {
+                    coffeeBean.remove();
+                    beansCaught++;
+                    document.getElementById("game-message").textContent = `Зерна пойманы: ${beansCaught}`;
+                });
+            }, 2000);
+        }
+
+        startCoffeeGame();  // Start the Coffee Bean Catcher Game
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
