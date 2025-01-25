@@ -64,23 +64,22 @@
             background-color: #6a4c29;
         }
 
+        button:active {
+            animation: shake 0.3s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+        }
+
         img {
             max-width: 70%;
             height: auto;
             border-radius: 8px;
             margin-top: 10px;
-        }
-
-        .fun-correct {
-            color: green;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .fun-wrong {
-            color: red;
-            font-size: 18px;
-            font-weight: bold;
         }
 
         /* Coffee Beans Catcher Game Styling */
@@ -93,35 +92,53 @@
             height: 300px;
             background: #f7f7f7;
             border-radius: 8px;
+            overflow: hidden;
         }
 
         #catcher {
             position: absolute;
             bottom: 10px;
             left: 50%;
-            width: 60px;
+            width: 80px;
             height: 60px;
-            background-color: brown;
+            background-color: #8b5e3b;
             border-radius: 50%;
-            transform: translateX(-50%);
+            transform: translateX(-50%) rotate(180deg);
+            border-top: 10px solid #5a3d26;
+            border-radius: 15px 15px 0 0;
         }
 
         .coffee-bean {
             position: absolute;
-            width: 40px;
-            height: 40px;
-            background-color: #4b3621;
-            border-radius: 50%;
-            animation: fall 2s linear infinite;
+            width: 30px;
+            height: 30px;
+            font-size: 30px;
+            text-align: center;
+            line-height: 30px;
         }
 
-        @keyframes fall {
-            0% {
-                top: -50px;
-            }
-            100% {
-                top: 300px;
-            }
+        /* Animation for correctness and wrongness */
+        @keyframes fadeInCorrect {
+            0% { opacity: 0; color: black; }
+            100% { opacity: 1; color: green; }
+        }
+
+        @keyframes fadeInWrong {
+            0% { opacity: 0; color: black; }
+            100% { opacity: 1; color: red; }
+        }
+
+        /* Apply the animations */
+        .fun-correct {
+            font-size: 18px;
+            font-weight: bold;
+            animation: fadeInCorrect 1s ease-in-out;
+        }
+
+        .fun-wrong {
+            font-size: 18px;
+            font-weight: bold;
+            animation: fadeInWrong 1s ease-in-out;
         }
 
         /* Modal styling */
@@ -172,185 +189,225 @@
             background: rgba(0, 0, 0, 0.4);
             z-index: 999;
         }
+        .styled-text{
+            font-size: 18px;
+            font-weight: bold;
+            color: #4b3621;
+        }
 
     </style>
 </head>
 <body>
-    <h1>Добро пожаловать в наше кафе!</h1>
-    <img class="logo" src="resized_logo-transformed.png" alt="Логотип кафе">
+<h1>Добро пожаловать в наше кафе!</h1>
+<img class="logo" src="resized_logo-transformed.png" alt="Логотип кафе">
 
-    <!-- Trivia Section -->
-    <div class="section">
-        <h2>Интересный факт о кофе</h2>
-        <button onclick="showTrivia()">Показать факт</button>
-    </div>
+<!-- Trivia Section -->
+<div class="section">
+    <h2>Интересный факт о кофе</h2>
+    <button onclick="showTrivia()">Показать факт</button>
+</div>
 
-    <!-- Jokes Section -->
-    <div class="section">
-        <h2>Шутка про кофе</h2>
-        <button onclick="showJoke()">Показать шутку</button>
-    </div>
+<!-- Jokes Section -->
+<div class="section">
+    <h2>Шутка про кофе</h2>
+    <button onclick="showJoke()">Показать шутку</button>
+</div>
 
-    <!-- Seasonal Menu Section -->
-    <div class="section">
-        <h2>Сезонное меню</h2>
-        <button onclick="showSeasonalMenu()">Показать меню</button>
-    </div>
+<!-- Seasonal Menu Section -->
+<div class="section">
+    <h2>Сезонное меню</h2>
+    <button onclick="showSeasonalMenu()">Показать меню</button>
+</div>
 
-    <!-- Coffee Brewing Game Section (Cappuccino Steps) -->
-    <div class="section">
-        <h2>Приготовьте свою чашку капучино!</h2>
-        <div id="game-container">
-            <p>Кликайте на шаги для приготовления капучино в правильном порядке!</p>
-            <div>
-                <button id="step-1" onclick="brewCoffee(1)">Приготовить эспрессо</button>
-                <button id="step-2" onclick="brewCoffee(2)">Пробить молоко</button>
-                <button id="step-3" onclick="brewCoffee(3)">Добавить молоко в эспрессо</button>
-                <button id="step-4" onclick="brewCoffee(4)">Добавить молочную пенку</button>
-                <button id="step-5" onclick="brewCoffee(5)">Посыпать какао (по желанию)</button>
-            </div>
-            <p id="message"></p>
+<!-- Coffee Brewing Game Section (Cappuccino Steps) -->
+<div class="section">
+    <h2>Приготовьте свою чашку капучино!</h2>
+    <div id="game-container">
+        <p>Кликайте на шаги для приготовления капучино в правильном порядке!</p>
+        <div>
+            <button id="step-1" onclick="brewCoffee(1)">Приготовить эспрессо</button>
+            <button id="step-2" onclick="brewCoffee(2)">Пробить молоко</button>
+            <button id="step-3" onclick="brewCoffee(3)">Добавить молоко в эспрессо</button>
+            <button id="step-4" onclick="brewCoffee(4)">Добавить молочную пенку</button>
+            <button id="step-5" onclick="brewCoffee(5)">Посыпать какао (по желанию)</button>
         </div>
+        <p id="message"></p>
     </div>
+</div>
 
-    <!-- Coffee Beans Catcher Game Section -->
-    <div class="section">
-        <h2>Поймайте кофейные зерна!</h2>
-        <div id="coffee-game">
-            <div id="catcher"></div>
-        </div>
-        <p id="game-message">Зерна пойманы: 0</p>
+<!-- Coffee Beans Catcher Game Section -->
+<div class="section">
+    <h2>Поймайте кофейные зерна!</h2>
+    <div id="coffee-game">
+        <div id="catcher"></div>
     </div>
+    <p id="game-message">Зерна пойманы: 0</p>
+    <button onclick="startGame()">Начать!</button>
+    <button onclick="stopGame()">Остановить!</button>
+</div>
 
-    <!-- Modal structure -->
-    <div class="overlay" id="overlay"></div>
-    <div class="modal" id="modal">
-        <p id="modal-content"></p>
-        <button class="close-btn" onclick="closeModal()">Закрыть</button>
-    </div>
+<!-- Modal structure -->
+<div class="overlay" id="overlay"></div>
+<div class="modal" id="modal">
+    <p id="modal-content"></p>
+    <button class="close-btn" onclick="closeModal()">Закрыть</button>
+</div>
 
-    <script>
-        // Trivia and jokes arrays
-        const triviaList = [
-            "Кофе был открыт козами! Пастух заметил, что его козы стали более энергичными после того, как съели ягоды кофе.",
-            "Самый дорогой кофе в мире называется 'Копи Лювак'. Его производят, ферментируя зерна в желудке зверька — мусанга.",
-            "Эспрессо изобрели в Италии в начале 20 века.",
-            "Кофе — это второй по популярности напиток в мире после воды!",
-            "Каждый день в мире выпивается более 2,25 миллиарда чашек кофе."
-        ];
+<script>
+// Trivia and jokes arrays
+const triviaList = [
+    "Кофе был открыт козами! Пастух заметил, что его козы стали более энергичными после того, как съели ягоды кофе.",
+    "Самый дорогой кофе в мире называется 'Копи Лювак'. Его производят, ферментируя зерна в желудке зверька — мусанга.",
+    "Эспрессо изобрели в Италии в начале 20 века.",
+    "Кофе — это второй по популярности напиток в мире после воды!",
+    "Каждый день в мире выпивается более 2,25 миллиарда чашек кофе."
+];
 
-        const jokeList = [
-            "Почему кофе никогда не шутит про сахар? Потому что это было бы слишком сладко!",
-            "Что говорит кофе, когда оно заканчивается? 'До капли последней!'",
-            "Почему капучино всегда улыбается? Потому что у него пенка в порядке!",
-            "Как кофе приветствует своих друзей? 'Эй, сваримся позже!'"
-        ];
+const jokeList = [
+    "Почему кофе никогда не шутит про сахар? Потому что это было бы слишком сладко!",
+    "Что говорит кофе, когда оно заканчивается? 'До капли последней!'",
+    "Почему капучино всегда улыбается? Потому что у него пенка в порядке!",
+    "Как кофе приветствует своих друзей? 'Эй, сваримся позже!'"
+];
 
-        // Show trivia in modal
-        function showTrivia() {
-            const randomTrivia = triviaList[Math.floor(Math.random() * triviaList.length)];
-            showModal(randomTrivia);
+
+// Show trivia in modal
+function showTrivia() {
+    const randomTrivia = triviaList[Math.floor(Math.random() * triviaList.length)];
+    showModal(randomTrivia);
+}
+
+// Show joke in modal
+function showJoke() {
+    const randomJoke = jokeList[Math.floor(Math.random() * jokeList.length)];
+    showModal(randomJoke);
+}
+
+// Show modal
+function showModal(content) {
+    document.getElementById('modal-content').innerHTML = content;
+    document.getElementById('overlay').style.display = 'block';
+    document.getElementById('modal').style.display = 'block';
+}
+
+// Close modal
+function closeModal() {
+    document.getElementById('overlay').style.display = 'none';
+    document.getElementById('modal').style.display = 'none';
+}
+
+// Show seasonal menu image in modal
+function showSeasonalMenu() {
+    const seasonalMenuImage = '<img src="photo_2025-01-15_20-15-43.jpg" alt="Сезонное меню">';
+    showModal(seasonalMenuImage);
+}
+
+// Coffee brewing game logic
+let cappuccinoSteps = [1, 2, 3, 4, 5];
+let currentStep = 0;
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+// Shuffle the steps
+cappuccinoSteps = shuffleArray(cappuccinoSteps);
+
+function brewCoffee(step) {
+    const messageEl = document.getElementById("message");
+
+    // Check if the clicked step is in the correct order
+    if (step === cappuccinoSteps[currentStep]) {
+        currentStep++;
+        messageEl.innerHTML = `<span class="fun-correct">Правильно! Следующий шаг...</span>`;
+        cappuccinoSteps = shuffleArray([1, 2, 3, 4, 5]);
+        // If all steps are completed
+    if (currentStep === cappuccinoSteps.length) {
+            messageEl.innerHTML = `<span class="fun-correct">Вы приготовили капучино! Наслаждайтесь!</span>`;
+            currentStep = 0; // Reset game for replay
+            cappuccinoSteps = shuffleArray([1, 2, 3, 4, 5]); // Reshuffle steps for replay
+        }
+    } else {
+        messageEl.innerHTML = `<span class="fun-wrong">Неправильный шаг! Попробуйте снова.</span>`;
+        currentStep = 0; // Reset game on mistake
+        cappuccinoSteps = shuffleArray([1, 2, 3, 4, 5]); // Reshuffle steps on mistake
+    }
+}
+
+// Coffee Beans Catcher Game
+let score = 0;
+let beanInterval;
+
+function createCoffeeBean() {
+    const gameArea = document.getElementById("coffee-game");
+    const bean = document.createElement("div");
+    bean.classList.add("coffee-bean");
+    bean.innerHTML = "🌿"; // Using the coffee bean emoji with a stem
+
+    const randomX = Math.floor(Math.random() * (gameArea.offsetWidth - 30));
+    bean.style.left = `${randomX}px`;
+    bean.style.top = "0px";
+
+    gameArea.appendChild(bean);
+
+    let fallInterval = setInterval(() => {
+        let beanTop = parseInt(bean.style.top);
+        if (beanTop < gameArea.offsetHeight - 60) {
+            bean.style.top = `${beanTop + 5}px`;
+        } else {
+            clearInterval(fallInterval);
+            gameArea.removeChild(bean);
         }
 
-        // Show joke in modal
-        function showJoke() {
-            const randomJoke = jokeList[Math.floor(Math.random() * jokeList.length)];
-            showModal(randomJoke);
-        }
-
-        // Show modal
-        function showModal(content) {
-            document.getElementById('modal-content').innerHTML = content;
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('modal').style.display = 'block';
-        }
-
-        // Close modal
-        function closeModal() {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('modal').style.display = 'none';
-        }
-
-        // Show seasonal menu image in modal
-        function showSeasonalMenu() {
-            const seasonalMenuImage = '<img src="photo_2025-01-15_20-15-43.jpg" alt="Сезонное меню">'; // Replace with actual image path
-            showModal(seasonalMenuImage);
-        }
-
-        // Coffee brewing game logic
-        let cappuccinoSteps = [1, 2, 3, 4, 5];
-        let currentStep = 0;
-
-        function brewCoffee(step) {
-            const messageEl = document.getElementById("message");
-
-            // Reset previous animations
-            messageEl.classList.remove("fun-correct", "fun-wrong");
-
-            if (step === cappuccinoSteps[currentStep]) {
-                currentStep++;
-                messageEl.innerHTML = `<span class="fun-correct">Класс! Вы сделали это правильно!</span>`;
-                if (currentStep === cappuccinoSteps.length) {
-                    messageEl.innerHTML = `<span class="fun-correct">Капучино готово! Наслаждайтесь!</span>`;
-                }
-            } else {
-                messageEl.innerHTML = `<span class="fun-wrong">Ой, это не то! Попробуйте ещё раз!</span>`;
-            }
-        }
-
-        // Coffee Bean Catcher Game logic
-        let beansCaught = 0;
+        // Check if bean is caught
         const catcher = document.getElementById("catcher");
-        let coffeeBeans = [];
+        const catcherRect = catcher.getBoundingClientRect();
+        const beanRect = bean.getBoundingClientRect();
 
-        function startCoffeeGame() {
-            setInterval(() => {
-                const coffeeBean = document.createElement("div");
-                coffeeBean.classList.add("coffee-bean");
-
-                const leftPosition = Math.random() * 80 + 10;
-                coffeeBean.style.left = `${leftPosition}%`;
-
-                document.getElementById("coffee-game").appendChild(coffeeBean);
-
-                coffeeBean.addEventListener("animationiteration", () => {
-                    coffeeBean.remove();
-                });
-
-                coffeeBean.addEventListener("click", () => {
-                    coffeeBean.remove();
-                    beansCaught++;
-                    document.getElementById("game-message").textContent = `Зерна пойманы: ${beansCaught}`;
-                });
-            }, 2000);
+        if (
+            beanRect.bottom >= catcherRect.top &&
+            beanRect.left >= catcherRect.left &&
+            beanRect.right <= catcherRect.right
+        ) {
+            clearInterval(fallInterval);
+            gameArea.removeChild(bean);
+            score++;
+            document.getElementById("game-message").innerText = `Зерна пойманы: ${score}`;
         }
+    }, 50);
+}
 
-        startCoffeeGame();  // Start the Coffee Bean Catcher Game
-    </script>
+// Move the catcher left and right
+document.addEventListener("keydown", (event) => {
+    const catcher = document.getElementById("catcher");
+    const step = 20;
+    const left = catcher.offsetLeft;
+    const gameAreaWidth = document.getElementById("coffee-game").offsetWidth;
+
+    if (event.key === "ArrowLeft" && left > 0) {
+        catcher.style.left = `${left - step}px`;
+    }
+    if (event.key === "ArrowRight" && left < gameAreaWidth - catcher.offsetWidth) {
+        catcher.style.left = `${left + step}px`;
+    }
+});
+
+// Start the coffee beans game
+function startGame() {
+    score = 0;
+    document.getElementById("game-message").innerText = `Зерна пойманы: ${score}`;
+    beanInterval = setInterval(createCoffeeBean, 1000);
+}
+
+// Stop the coffee beans game
+function stopGame() {
+    clearInterval(beanInterval);
+}
+</script>
+
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
