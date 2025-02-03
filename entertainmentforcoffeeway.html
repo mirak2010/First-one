@@ -255,6 +255,7 @@
 
 <script>
 // Trivia and jokes arrays
+// Trivia and jokes arrays
 const triviaList = [
     "Кофе был открыт козами! Пастух заметил, что его козы стали более энергичными после того, как съели ягоды кофе.",
     "Самый дорогой кофе в мире называется 'Копи Лювак'. Его производят, ферментируя зерна в желудке зверька — мусанга.",
@@ -269,7 +270,6 @@ const jokeList = [
     "Почему капучино всегда улыбается? Потому что у него пенка в порядке!",
     "Как кофе приветствует своих друзей? 'Эй, сваримся позже!'"
 ];
-
 
 // Show trivia in modal
 function showTrivia() {
@@ -324,9 +324,8 @@ function brewCoffee(step) {
     if (step === cappuccinoSteps[currentStep]) {
         currentStep++;
         messageEl.innerHTML = `<span class="fun-correct">Правильно! Следующий шаг...</span>`;
-        cappuccinoSteps = shuffleArray([1, 2, 3, 4, 5]);
         // If all steps are completed
-    if (currentStep === cappuccinoSteps.length) {
+        if (currentStep === cappuccinoSteps.length) {
             messageEl.innerHTML = `<span class="fun-correct">Вы приготовили капучино! Наслаждайтесь!</span>`;
             currentStep = 0; // Reset game for replay
             cappuccinoSteps = shuffleArray([1, 2, 3, 4, 5]); // Reshuffle steps for replay
@@ -341,6 +340,7 @@ function brewCoffee(step) {
 // Coffee Beans Catcher Game
 let score = 0;
 let beanInterval;
+let catcherPosition = 0;
 
 function createCoffeeBean() {
     const gameArea = document.getElementById("coffee-game");
@@ -407,6 +407,7 @@ function startGame() {
 function stopGame() {
     clearInterval(beanInterval);
 }
+
 </script>
 
 </body>
