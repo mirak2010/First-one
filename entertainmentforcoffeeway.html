@@ -234,6 +234,8 @@
         <p id="message"></p>
     </div>
 </div>
+<!-- Add this button to start the brewing game -->
+<button id="start-game-btn">Начать игру</button>
 
 <!-- Coffee Beans Catcher Game Section -->
 <div class="section">
@@ -256,74 +258,34 @@
 <script>
 // Trivia and jokes arrays
 // Trivia and jokes arrays
-const triviaList = [
-    "Кофе был открыт козами! Пастух заметил, что его козы стали более энергичными после того, как съели ягоды кофе.",
-    "Самый дорогой кофе в мире называется 'Копи Лювак'. Его производят, ферментируя зерна в желудке зверька — мусанга.",
-    "Эспрессо изобрели в Италии в начале 20 века.",
-    "Кофе — это второй по популярности напиток в мире после воды!",
-    "Каждый день в мире выпивается более 2,25 миллиарда чашек кофе."
-];
-
-const jokeList = [
-    "Почему кофе никогда не шутит про сахар? Потому что это было бы слишком сладко!",
-    "Что говорит кофе, когда оно заканчивается? 'До капли последней!'",
-    "Почему капучино всегда улыбается? Потому что у него пенка в порядке!",
-    "Как кофе приветствует своих друзей? 'Эй, сваримся позже!'"
-];
-
-// Show trivia in modal
-function showTrivia() {
-    const randomTrivia = triviaList[Math.floor(Math.random() * triviaList.length)];
-    showModal(randomTrivia);
-}
-
-// Show joke in modal
-function showJoke() {
-    const randomJoke = jokeList[Math.floor(Math.random() * jokeList.length)];
-    showModal(randomJoke);
-}
-
-// Show modal
-function showModal(content) {
-    document.getElementById('modal-content').innerHTML = content;
-    document.getElementById('overlay').style.display = 'block';
-    document.getElementById('modal').style.display = 'block';
-}
-
-// Close modal
-function closeModal() {
-    document.getElementById('overlay').style.display = 'none';
-    document.getElementById('modal').style.display = 'none';
-}
-
-// Show seasonal menu image in modal
-function showSeasonalMenu() {
-    const seasonalMenuImage = '<img src="photo_2025-01-15_20-15-43.jpg" alt="Сезонное меню">';
-    showModal(seasonalMenuImage);
-}
-
 // Coffee brewing game logic
-let cappuccinoSteps = [1, 2, 3, 4, 5];
-let currentStep = 0;
+let cappuccinoSteps = [1, 2, 3, 4, 5]; // Steps of the cappuccino
+let currentStep = 0; // Tracks the current step in the game
 
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+        [array[i], array[j]] = [array[j], array[i]]; // Shuffle the array
     }
     return array;
 }
 
-// Shuffle the steps
-cappuccinoSteps = shuffleArray(cappuccinoSteps);
+// Shuffle the steps when the game starts
+function startBrewingGame() {
+    cappuccinoSteps = shuffleArray([1, 2, 3, 4, 5]); // Shuffle steps on start
+    currentStep = 0; // Reset the current step
+    document.getElementById("message").innerHTML = ''; // Clear any previous message
+}
 
+// Check the brewing step
 function brewCoffee(step) {
     const messageEl = document.getElementById("message");
 
-    // Check if the clicked step is in the correct order
     if (step === cappuccinoSteps[currentStep]) {
+        // If correct step clicked
         currentStep++;
         messageEl.innerHTML = `<span class="fun-correct">Правильно! Следующий шаг...</span>`;
+
         // If all steps are completed
         if (currentStep === cappuccinoSteps.length) {
             messageEl.innerHTML = `<span class="fun-correct">Вы приготовили капучино! Наслаждайтесь!</span>`;
@@ -331,82 +293,16 @@ function brewCoffee(step) {
             cappuccinoSteps = shuffleArray([1, 2, 3, 4, 5]); // Reshuffle steps for replay
         }
     } else {
+        // If incorrect step clicked
         messageEl.innerHTML = `<span class="fun-wrong">Неправильный шаг! Попробуйте снова.</span>`;
-        currentStep = 0; // Reset game on mistake
-        cappuccinoSteps = shuffleArray([1, 2, 3, 4, 5]); // Reshuffle steps on mistake
+        // Reset to first step in the shuffled sequence
+        currentStep = 0;
     }
 }
 
-// Coffee Beans Catcher Game
-let score = 0;
-let beanInterval;
-let catcherPosition = 0;
+// Add an event listener to start the game when the page is loaded or when the player clicks to start
+document.getElementById("start-game-btn").addEventListener("click", startBrewingGame);
 
-function createCoffeeBean() {
-    const gameArea = document.getElementById("coffee-game");
-    const bean = document.createElement("div");
-    bean.classList.add("coffee-bean");
-    bean.innerHTML = "🌿"; // Using the coffee bean emoji with a stem
-
-    const randomX = Math.floor(Math.random() * (gameArea.offsetWidth - 30));
-    bean.style.left = `${randomX}px`;
-    bean.style.top = "0px";
-
-    gameArea.appendChild(bean);
-
-    let fallInterval = setInterval(() => {
-        let beanTop = parseInt(bean.style.top);
-        if (beanTop < gameArea.offsetHeight - 60) {
-            bean.style.top = `${beanTop + 5}px`;
-        } else {
-            clearInterval(fallInterval);
-            gameArea.removeChild(bean);
-        }
-
-        // Check if bean is caught
-        const catcher = document.getElementById("catcher");
-        const catcherRect = catcher.getBoundingClientRect();
-        const beanRect = bean.getBoundingClientRect();
-
-        if (
-            beanRect.bottom >= catcherRect.top &&
-            beanRect.left >= catcherRect.left &&
-            beanRect.right <= catcherRect.right
-        ) {
-            clearInterval(fallInterval);
-            gameArea.removeChild(bean);
-            score++;
-            document.getElementById("game-message").innerText = `Зерна пойманы: ${score}`;
-        }
-    }, 50);
-}
-
-// Move the catcher left and right
-document.addEventListener("keydown", (event) => {
-    const catcher = document.getElementById("catcher");
-    const step = 20;
-    const left = catcher.offsetLeft;
-    const gameAreaWidth = document.getElementById("coffee-game").offsetWidth;
-
-    if (event.key === "ArrowLeft" && left > 0) {
-        catcher.style.left = `${left - step}px`;
-    }
-    if (event.key === "ArrowRight" && left < gameAreaWidth - catcher.offsetWidth) {
-        catcher.style.left = `${left + step}px`;
-    }
-});
-
-// Start the coffee beans game
-function startGame() {
-    score = 0;
-    document.getElementById("game-message").innerText = `Зерна пойманы: ${score}`;
-    beanInterval = setInterval(createCoffeeBean, 1000);
-}
-
-// Stop the coffee beans game
-function stopGame() {
-    clearInterval(beanInterval);
-}
 
 </script>
 
