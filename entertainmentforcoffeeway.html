@@ -222,7 +222,7 @@
 <!-- Coffee Brewing Game Section (Cappuccino Steps) -->
 <div class="section">
     <h2>Приготовьте свою чашку капучино!</h2>
-    <div id="game-container">
+    <div>
         <p>Кликайте на шаги для приготовления капучино в правильном порядке!</p>
         <div>
             <button id="step-1" onclick="brewCoffee(1)">Приготовить эспрессо</button>
@@ -257,7 +257,7 @@
 
 <script>
 // Trivia and jokes arrays
-// Trivia and jokes arrays
+
 // Coffee brewing game logic
 let cappuccinoSteps = [1, 2, 3, 4, 5]; // Steps of the cappuccino
 let currentStep = 0; // Tracks the current step in the game
@@ -301,9 +301,34 @@ function brewCoffee(step) {
 }
 
 // Add an event listener to start the game when the page is loaded or when the player clicks to start
-document.getElementById("start-game-btn").addEventListener("click", startBrewingGame);
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("start-game-btn").addEventListener("click", startBrewingGame);
+});
 
+function showTrivia() {
+    // Add logic to show a trivia fact
+}
 
+function showJoke() {
+    // Add logic to show a joke
+}
+
+function showSeasonalMenu() {
+    // Add logic to show the seasonal menu
+}
+
+function startGame() {
+    // Add logic to start the coffee beans catcher game
+}
+
+function stopGame() {
+    // Add logic to stop the coffee beans catcher game
+}
+
+function closeModal() {
+    document.getElementById("modal").style.display = "none";
+    document.getElementById("overlay").style.display = "none";
+}
 </script>
 
 </body>
