@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Развлечения пока ждете</title>
+    <link rel="icon" type="image/x-icon" href="logo.png">
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -21,17 +22,57 @@
             background-image: url('coffee-beans-levitate-white-background.jpg');
             background-size: cover;
             background-position: center;
+            transition: opacity 0.5s ease;
+        }
+
+        .greeting {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 248, 225, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 1;
+            transition: opacity 1s ease;
+        }
+
+        .greeting h1 {
+            color: #8b5e3b;
+            font-size: 3em;
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite; /* Floating animation */
+        }
+        .greeting h2 {
+            color: #8b5e3b;
+            
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite; /* Floating animation */
+        }
+
+        .greeting img {
+            width: 150px; /* Adjust logo size */
+            height: auto;
+            animation: float 3s ease-in-out infinite; /* Floating animation */
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px); /* Float up */
+            }
         }
 
         h1 {
             color: #8b5e3b;
             text-align: center;
             margin-bottom: 20px;
-        }
-
-        .logo {
-            margin-bottom: 10px;
-            background-color: transparent !important;
         }
 
         .section {
@@ -57,26 +98,18 @@
             border-radius: 5px;
             cursor: pointer;
             margin-top: 10px;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.3s;
+            perspective: 1000px; /* Enable 3D perspective */
         }
 
         button:hover {
             background-color: #6a4c29;
+            transform: translateY(-5px) rotateX(5deg); /* 3D lift effect */
         }
 
-        button:active {
-            animation: shake 0.3s;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            50% { transform: translateX(5px); }
-            75% { transform: translateX(-5px); }
-        }
-
-        img {
-            max-width: 70%;
+        .menu-image {
+            width: 100%;
+            max-width: 600px;
             height: auto;
             border-radius: 8px;
             margin-top: 10px;
@@ -106,6 +139,7 @@
             transform: translateX(-50%) rotate(180deg);
             border-top: 10px solid #5a3d26;
             border-radius: 15px 15px 0 0;
+            transition: transform 0.3s;
         }
 
         .coffee-bean {
@@ -115,30 +149,7 @@
             font-size: 30px;
             text-align: center;
             line-height: 30px;
-        }
-
-        /* Animation for correctness and wrongness */
-        @keyframes fadeInCorrect {
-            0% { opacity: 0; color: black; }
-            100% { opacity: 1; color: green; }
-        }
-
-        @keyframes fadeInWrong {
-            0% { opacity: 0; color: black; }
-            100% { opacity: 1; color: red; }
-        }
-
-        /* Apply the animations */
-        .fun-correct {
-            font-size: 18px;
-            font-weight: bold;
-            animation: fadeInCorrect 1s ease-in-out;
-        }
-
-        .fun-wrong {
-            font-size: 18px;
-            font-weight: bold;
-            animation: fadeInWrong 1s ease-in-out;
+            transition: transform 0.3s;
         }
 
         /* Modal styling */
@@ -158,27 +169,6 @@
             text-align: center;
         }
 
-        .modal img {
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
-        }
-
-        .modal p {
-            color: #4b3621;
-        }
-
-        .modal .close-btn {
-            background: #8b5e3b;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            font-size: 14px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
         .overlay {
             display: none;
             position: fixed;
@@ -189,71 +179,89 @@
             background: rgba(0, 0, 0, 0.4);
             z-index: 999;
         }
-        .styled-text{
-            font-size: 18px;
-            font-weight: bold;
-            color: #4b3621;
-        }
-
     </style>
 </head>
 <body>
-<h1>Добро пожаловать в наше кафе!</h1>
-<img class="logo" src="resized_logo-transformed.png" alt="Логотип кафе">
 
-<!-- Trivia Section -->
-<div class="section">
-    <h2>Интересный факт о кофе</h2>
-    <button onclick="showTrivia()">Показать факт</button>
+<!-- Greeting Page -->
+<div class="greeting" id="greeting">
+    <h1>Добро пожаловать!</h1>
+    <h2>В ваше новое кофейное путешествие!</h2>
+    <img src="resized_logo-transformed.png" alt="Логотип кафе">
 </div>
+<img src="resized_logo-transformed.png" alt="Логотип кафе">
+<!-- Main Content -->
+<div id="main-content" style="display: none;">
+    <h1 style="color: #1f0000;">Добро пожаловать в наше кафе!</h1>
 
-<!-- Jokes Section -->
-<div class="section">
-    <h2>Шутка про кофе</h2>
-    <button onclick="showJoke()">Показать шутку</button>
-</div>
+    <!-- Trivia Section -->
+    <div class="section">
+        <h2>Интересный факт о кофе</h2>
+        <button onclick="showTrivia()">Показать факт</button>
+    </div>
 
-<!-- Seasonal Menu Section -->
-<div class="section">
-    <h2>Сезонное меню</h2>
-    <button onclick="showSeasonalMenu()">Показать меню</button>
-</div>
+    <!-- Jokes Section -->
+    <div class="section">
+        <h2>Шутка про кофе</h2>
+        <button onclick="showJoke()">Показать шутку</button>
+    </div>
 
-<!-- Coffee Brewing Game Section (Cappuccino Steps) -->
-<div class="section">
-    <h2>Приготовьте свою чашку капучино!</h2>
-    <div id="game-container">
-        <p>Кликайте на шаги для приготовления капучино в правильном порядке!</p>
-        <div>
-            <button id="step-1" onclick="brewCoffee(1)">Приготовить эспрессо</button>
-            <button id="step-2" onclick="brewCoffee(2)">Пробить молоко</button>
-            <button id="step-3" onclick="brewCoffee(3)">Добавить молоко в эспрессо</button>
-            <button id="step-4" onclick="brewCoffee(4)">Добавить молочную пенку</button>
-            <button id="step-5" onclick="brewCoffee(5)">Посыпать какао (по желанию)</button>
+    <!-- Seasonal Menu Section -->
+    <div class="section">
+        <h2>Сезонное меню</h2>
+        <button onclick="showSeasonalMenu()">Показать меню</button>
+        <div class="menu-content" id="seasonal-menu-content" style="display:none;">
+            <img src="photo_2025-01-15_20-15-43.jpg" alt="Сезонное меню" class="menu-image">
         </div>
-        <p id="message"></p>
     </div>
-</div>
 
-<!-- Coffee Beans Catcher Game Section -->
-<div class="section">
-    <h2>Поймайте кофейные зерна!</h2>
-    <div id="coffee-game">
-        <div id="catcher"></div>
+    <!-- Coffee Brewing Game Section -->
+    <div class="section">
+        <h2>Приготовьте свою чашку капучино!</h2>
+        <div id="game-container">
+            <p>Кликайте на шаги для приготовления капучино в правильном порядке!</p>
+            <div>
+                <button id="step-1" onclick="brewCoffee(1)">Приготовить эспрессо</button>
+                <button id="step-2" onclick="brewCoffee(2)">Пробить молоко</button>
+                <button id="step-3" onclick="brewCoffee(3)">Добавить молоко в эспрессо</button>
+                <button id="step-4" onclick="brewCoffee(4)">Добавить молочную пенку</button>
+                <button id="step-5" onclick="brewCoffee(5)">Посыпать какао (по желанию)</button>
+            </div>
+            <p id="message"></p>
+        </div>
     </div>
-    <p id="game-message">Зерна пойманы: 0</p>
-    <button onclick="startGame()">Начать!</button>
-    <button onclick="stopGame()">Остановить!</button>
-</div>
 
-<!-- Modal structure -->
-<div class="overlay" id="overlay"></div>
-<div class="modal" id="modal">
-    <p id="modal-content"></p>
-    <button class="close-btn" onclick="closeModal()">Закрыть</button>
+    <!-- Coffee Beans Catcher Game Section -->
+    <div class="section">
+        <h2>Поймайте кофейные зерна!</h2>
+        <div id="coffee-game">
+            <div id="catcher"></div>
+        </div>
+        <p id="game-message">Зерна пойманы: 0</p>
+        <button onclick="startGame()">Начать!</button>
+        <button onclick="stopGame()">Остановить!</button>
+    </div>
+
+    <!-- Modal structure -->
+    <div class="overlay" id="overlay"></div>
+    <div class="modal" id="modal">
+        <p id="modal-content"></p>
+        <button class="close-btn" onclick="closeModal()">Закрыть</button>
+    </div>
+
+    <audio id="success-sound" src="success-sound.mp3" preload="auto"></audio>
 </div>
 
 <script>
+// Show greeting for 3 seconds and then hide it
+setTimeout(() => {
+    document.getElementById('greeting').style.opacity = '0';
+    setTimeout(() => {
+        document.getElementById('greeting').style.display = 'none';
+        document.getElementById('main-content').style.display = 'block';
+    }, 1000); // Wait for fade-out transition
+}, 3000); // Show greeting for 3 seconds
+
 // Trivia and jokes arrays
 const triviaList = [
     "Кофе был открыт козами! Пастух заметил, что его козы стали более энергичными после того, как съели ягоды кофе.",
@@ -269,7 +277,6 @@ const jokeList = [
     "Почему капучино всегда улыбается? Потому что у него пенка в порядке!",
     "Как кофе приветствует своих друзей? 'Эй, сваримся позже!'"
 ];
-
 
 // Show trivia in modal
 function showTrivia() {
@@ -298,44 +305,50 @@ function closeModal() {
 
 // Show seasonal menu image in modal
 function showSeasonalMenu() {
-    const seasonalMenuImage = '<img src="photo_2025-01-15_20-15-43.jpg" alt="Сезонное меню">';
+    const seasonalMenuImage = '<img src="photo_2025-01-15_20-15-43.jpg" alt="Сезонное меню" class="menu-image">';
     showModal(seasonalMenuImage);
 }
 
 // Coffee brewing game logic
-let cappuccinoSteps = [1, 2, 3, 4, 5];
 let currentStep = 0;
+const totalSteps = 5;
 
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
+// Initialize the game
+function initializeGame() {
+    currentStep = 0; // Reset current step
+    document.getElementById("message").innerHTML = ""; // Clear previous messages
 }
 
-// Shuffle the steps
-cappuccinoSteps = shuffleArray(cappuccinoSteps);
+// Call this function to start the game
+initializeGame();
 
 function brewCoffee(step) {
     const messageEl = document.getElementById("message");
 
-    // Check if the clicked step is in the correct order
-    if (step === cappuccinoSteps[currentStep]) {
+    if (step === currentStep + 1) {
         currentStep++;
         messageEl.innerHTML = `<span class="fun-correct">Правильно! Следующий шаг...</span>`;
-        cappuccinoSteps = shuffleArray([1, 2, 3, 4, 5]);
-        // If all steps are completed
-    if (currentStep === cappuccinoSteps.length) {
-            messageEl.innerHTML = `<span class="fun-correct">Вы приготовили капучино! Наслаждайтесь!</span>`;
-            currentStep = 0; // Reset game for replay
-            cappuccinoSteps = shuffleArray([1, 2, 3, 4, 5]); // Reshuffle steps for replay
+
+        if (currentStep === totalSteps) {
+            setTimeout(() => {
+                messageEl.innerHTML = `<span class="fun-congrats">Вы приготовили капучино! Поздравляем!</span>`;
+                playSuccessSound();
+            }, 500);
+
+            setTimeout(() => {
+                initializeGame();
+                messageEl.innerHTML = ""; // Clear message after reset
+            }, 4000);
         }
     } else {
         messageEl.innerHTML = `<span class="fun-wrong">Неправильный шаг! Попробуйте снова.</span>`;
-        currentStep = 0; // Reset game on mistake
-        cappuccinoSteps = shuffleArray([1, 2, 3, 4, 5]); // Reshuffle steps on mistake
     }
+}
+
+// Play success sound
+function playSuccessSound() {
+    const sound = document.getElementById("success-sound");
+    sound.play();
 }
 
 // Coffee Beans Catcher Game
