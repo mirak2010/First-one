@@ -23,6 +23,9 @@
             background-size: cover;
             background-position: center;
             transition: opacity 0.5s ease;
+            
+           
+
         }
 
         .greeting {
@@ -311,6 +314,77 @@
             height: 100vh; /* Ensures it takes the full screen height */
             flex-direction: column;
         }
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2em;
+            }
+            h2 {
+                font-size: 1.5em;
+            }
+        }
+        #mobile-controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        
+        #mobile-controls button {
+            font-size: 20px;
+            padding: 10px;
+            margin: 5px;
+        }
+        .modal {
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        #coffee-game {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            background: #f7f7f7;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        #catcher {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            width: 80px;
+            height: 60px;
+            background: url('your-coffee-cup-image.png') no-repeat center/contain;
+            transform: translateX(-50%);
+        }
+        
+        /* ✅ Position the Arrows INSIDE the Game Container */
+        /* Arrow button styles */
+/* Arrow button styles */
+.move-arrow {
+    position: absolute;
+    bottom: 10px;
+    width: auto;
+    height: auto;
+    font-size: 32px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+
+/* Positioning the left and right arrows */
+.left-arrow {
+    left: 10px;
+}
+
+.right-arrow {
+    right: 10px;
+}
+
+        
+        .move-arrow:hover {
+            background: rgba(255, 200, 150, 0.9);
+        }
+        
         
     </style>
 </head>
@@ -351,7 +425,8 @@
     </div>
     <button id="start-over" onclick="startOver()" style="display: none;">Начать заново</button>
 
-  
+    
+    
     <!-- Coffee Selection -->
 <div class="section">
     <h2>Выберите свой кофе:</h2>
@@ -372,15 +447,20 @@
 
 
     <!-- Coffee Beans Catcher Game Section -->
+   
     <div class="section">
         <h2>Поймайте кофейные зерна!</h2>
         <div id="coffee-game">
+            <button class="move-arrow left-arrow" onclick="moveCatcher('left')">⬅️</button>
             <div id="catcher"></div>
+            <button class="move-arrow right-arrow" onclick="moveCatcher('right')">➡️</button>
         </div>
         <p id="game-message">Зерна пойманы: 0</p>
         <button onclick="startGame()">Начать!</button>
         <button onclick="stopGame()">Остановить!</button>
     </div>
+    
+
 
     <!-- Modal structure -->
     <div class="overlay" id="overlay"></div>
@@ -565,7 +645,29 @@ function startOver() {
 
 
 // Coffee Beans Catcher Game
-let score = 0;
+
+
+let score = 0; // Declare score at the start so it's accessible everywhere
+let successsound = new Audio('success-sound.mp3');
+
+// Preload sound on first user interaction (fixes autoplay restrictions)
+document.addEventListener("click", () => {
+    successsound.play().then(() => {
+        successsound.pause();
+        successsound.currentTime = 0;
+    }).catch(error => console.log("Sound preload error:", error));
+}, { once: true }); // Runs only once
+
+function catchBean() {
+    score++;
+    if (score === 20) {
+        successSound.play(); // Play success sound when 20 beans are caught
+        document.querySelectorAll(".move-arrow").forEach(arrow => {
+            arrow.style.color = "brown"; // Change arrow color
+        });
+    }
+}
+
 let beanInterval;
 
 function createCoffeeBean() {
@@ -573,6 +675,8 @@ function createCoffeeBean() {
     const bean = document.createElement("div");
     bean.classList.add("coffee-bean");
     bean.innerHTML = "🌿"; // Using the coffee bean emoji with a stem
+    const beanFallSpeed = 3; // Adjust this value (higher = faster, lower = slower)
+
 
     const randomX = Math.floor(Math.random() * (gameArea.offsetWidth - 30));
     bean.style.left = `${randomX}px`;
@@ -641,6 +745,36 @@ setTimeout(() => {
         document.getElementById('main-logo').style.display = 'block'; // Show the second logo
     }, 1000); // Wait for fade-out transition
 }, 3000);
+// Move the catcher using arrows (buttons & keyboard)
+function moveCatcher(direction) {
+    const catcher = document.getElementById("catcher");
+    const step = 20;
+    const left = catcher.offsetLeft;
+    const gameAreaWidth = document.getElementById("coffee-game").offsetWidth;
+
+    if (direction === "left" && left > 0) {
+        catcher.style.left = `${left - step}px`;
+    }
+    if (direction === "right" && left < gameAreaWidth - catcher.offsetWidth) {
+        catcher.style.left = `${left + step}px`;
+    }
+}
+
+document.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowLeft") {
+        moveCatcher("left");
+    }
+    if (event.key === "ArrowRight") {
+        moveCatcher("right");
+    }
+});
+
+
+
+
+
+
+
 
 </script>
 
