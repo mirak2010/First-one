@@ -179,17 +179,152 @@
             background: rgba(0, 0, 0, 0.4);
             z-index: 999;
         }
+        @keyframes shortBounce {
+            0% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        /* Green animation for correct step */
+        .fun-correct {
+            color: green !important;
+            font-weight: bold;
+            font-size: 18px;
+            animation: shortBounce 0.8s ease-in-out;
+            animation-fill-mode: forwards; /* Keeps final state */
+        }
+        
+        /* Red animation for incorrect step */
+        .fun-wrong {
+            color: red;
+            font-weight: bold;
+            font-size: 18px;
+            animation: shortBounce 0.8s ease-in-out;
+            animation-fill-mode: forwards;
+        }
+        
+        
+        
+        
+        
+        .fun-congrats{
+            color: green;
+        }
+        #brewing-game {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px; /* Adds spacing between buttons */
+        }
+        
+        #brewing-game button {
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .correct-animation {
+            color: green;
+            font-size: 1.2em;
+            animation: bounce 0.6s ease-in-out;
+        }
+        
+        .wrong-animation {
+            color: red;
+            font-size: 1.2em;
+            animation: shake 0.4s ease-in-out;
+        }
+        
+        
+        
+        /* Bounce effect */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* Shake effect */
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+        
+        /* Flashing effect */
+        @keyframes flash {
+            0% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+        
+        .complete-animation {
+            color: green; /* Green instead of yellow */
+            font-size: 1.4em;
+            animation: flash 1s infinite alternate;
+        }
+        #game-container {
+            text-align: center;
+            padding: 20px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            display: inline-block;
+        }
+        
+        #start-over {
+            margin-top: 15px;
+            padding: 8px 15px;
+            font-size: 16px;
+            border: none;
+            background-color: #8b5e3b;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+        }
+        
+        #start-over:hover {
+            background-color: #8b5e3b;
+        }
+        .greeting {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centers the content horizontally */
+            text-align: center;  /* Ensures text is also centered */
+        }
+        
+        .greeting img {
+            width: 150px; /* Adjust size as needed */
+            height: auto;
+            margin-bottom: 20px; /* Pushes the text down */
+            animation: float 3s ease-in-out infinite; /* Floating animation */
+        }
+        .main-logo {
+            display: block;
+            margin: 0 auto; /* Centers the logo horizontally */
+            width: 150px; /* Adjust size as needed */
+            height: auto;
+        }
+        .main-container {
+            display: flex;
+            justify-content: center; /* Centers horizontally */
+            align-items: center; /* Centers vertically if needed */
+            height: 100vh; /* Ensures it takes the full screen height */
+            flex-direction: column;
+        }
+        
     </style>
 </head>
 <body>
 
 <!-- Greeting Page -->
 <div class="greeting" id="greeting">
+    <img src="resized_logo-transformed.png" alt="Логотип кафе">
     <h1>Добро пожаловать!</h1>
     <h2>В ваше новое кофейное путешествие!</h2>
-    <img src="resized_logo-transformed.png" alt="Логотип кафе">
+   
 </div>
-<img src="resized_logo-transformed.png" alt="Логотип кафе">
+<img id="main-logo" src="resized_logo-transformed.png" alt="Логотип кафе" style="display: none;">
+
 <!-- Main Content -->
 <div id="main-content" style="display: none;">
     <h1 style="color: #1f0000;">Добро пожаловать в наше кафе!</h1>
@@ -214,22 +349,27 @@
             <img src="photo_2025-01-15_20-15-43.jpg" alt="Сезонное меню" class="menu-image">
         </div>
     </div>
+    <button id="start-over" onclick="startOver()" style="display: none;">Начать заново</button>
 
-    <!-- Coffee Brewing Game Section -->
-    <div class="section">
-        <h2>Приготовьте свою чашку капучино!</h2>
-        <div id="game-container">
-            <p>Кликайте на шаги для приготовления капучино в правильном порядке!</p>
-            <div>
-                <button id="step-1" onclick="brewCoffee(1)">Приготовить эспрессо</button>
-                <button id="step-2" onclick="brewCoffee(2)">Пробить молоко</button>
-                <button id="step-3" onclick="brewCoffee(3)">Добавить молоко в эспрессо</button>
-                <button id="step-4" onclick="brewCoffee(4)">Добавить молочную пенку</button>
-                <button id="step-5" onclick="brewCoffee(5)">Посыпать какао (по желанию)</button>
-            </div>
-            <p id="message"></p>
-        </div>
-    </div>
+  
+    <!-- Coffee Selection -->
+<div class="section">
+    <h2>Выберите свой кофе:</h2>
+    <button onclick="showBrewingSteps('cappuccino')">Приготовить Капучино</button>
+    <button onclick="showBrewingSteps('americano')">Приготовить Американо</button>
+</div>
+
+
+<!-- Brewing Steps -->
+<!-- Brewing Steps -->
+<div class="section" id="brewing-steps" style="display: none;">
+    <h2 id="coffee-title"></h2>
+    <div id="brewing-game"></div>
+    <p id="message"></p> <!-- The message container where the button will be added -->
+</div>
+
+
+
 
     <!-- Coffee Beans Catcher Game Section -->
     <div class="section">
@@ -250,6 +390,8 @@
     </div>
 
     <audio id="success-sound" src="success-sound.mp3" preload="auto"></audio>
+   
+    
 </div>
 
 <script>
@@ -310,46 +452,117 @@ function showSeasonalMenu() {
 }
 
 // Coffee brewing game logic
-let currentStep = 0;
-const totalSteps = 5;
+// Create an audio element for the completion sound
+// Create an audio element for the completion sound
+// Create an audio element for the completion sound
+const successSound = new Audio("success-sound.mp3");
 
-// Initialize the game
-function initializeGame() {
-    currentStep = 0; // Reset current step
-    document.getElementById("message").innerHTML = ""; // Clear previous messages
+function showBrewingSteps(type) {
+    const brewingGame = document.getElementById("brewing-game");
+    const messageEl = document.getElementById("message");
+    const coffeeTitle = document.getElementById("coffee-title");
+
+    let steps = [];
+
+    if (type === "cappuccino") {
+        coffeeTitle.innerText = "Приготовление Капучино";
+        steps = [
+            "Приготовить эспрессо",
+            "Вспенить молоко",
+            "Добавить молоко в эспрессо",
+            "Добавить молочную пенку",
+            "Посыпать какао (по желанию)"
+        ];
+    } else {
+        coffeeTitle.innerText = "Приготовление Американо";
+        steps = [
+            "Приготовить эспрессо",
+            "Добавить горячую воду",
+            "Готово!"
+        ];
+    }
+
+    // Shuffle steps randomly
+    let shuffledSteps = [...steps].sort(() => Math.random() - 0.5);
+
+    // Clear previous steps and message
+    brewingGame.innerHTML = "";
+    messageEl.innerHTML = "";
+    messageEl.className = ""; // Reset animations
+    currentStep = 0;
+
+    // Create buttons for shuffled steps
+    shuffledSteps.forEach((step) => {
+        const button = document.createElement("button");
+        button.innerText = step;
+        button.onclick = () => brewCoffee(button, step, steps);
+        brewingGame.appendChild(button);
+    });
+
+    // Show the brewing steps section
+    document.getElementById("brewing-steps").style.display = "block";
 }
 
-// Call this function to start the game
-initializeGame();
-
-function brewCoffee(step) {
+let currentStep = 0;
+function brewCoffee(button, selectedStep, correctSteps) {
     const messageEl = document.getElementById("message");
 
-    if (step === currentStep + 1) {
+    if (selectedStep === correctSteps[currentStep]) {
+        button.innerHTML = `<span style="text-decoration: line-through; text-decoration-color: green;">${selectedStep} ✔️</span>`;
+        button.disabled = true; // Prevent multiple clicks
         currentStep++;
-        messageEl.innerHTML = `<span class="fun-correct">Правильно! Следующий шаг...</span>`;
 
-        if (currentStep === totalSteps) {
+        if (currentStep === correctSteps.length) {
             setTimeout(() => {
-                messageEl.innerHTML = `<span class="fun-congrats">Вы приготовили капучино! Поздравляем!</span>`;
-                playSuccessSound();
+                messageEl.innerHTML = "🎉 Ваш кофе готов! ☕";
+                messageEl.className = "complete-animation"; // Flashing effect
+                successSound.play(); // Play success sound
+        
+                // Create "Start Over" button dynamically
+                let startOverBtn = document.createElement("button");
+                startOverBtn.id = "start-over";
+                startOverBtn.innerText = "Начать заново";
+                startOverBtn.onclick = startOver;
+                startOverBtn.style.display = "block";
+        
+                // Append the button inside the message container
+                messageEl.appendChild(document.createElement("br")); // Line break for spacing
+                messageEl.appendChild(startOverBtn);
             }, 500);
-
-            setTimeout(() => {
-                initializeGame();
-                messageEl.innerHTML = ""; // Clear message after reset
-            }, 4000);
         }
+        
+        
     } else {
-        messageEl.innerHTML = `<span class="fun-wrong">Неправильный шаг! Попробуйте снова.</span>`;
+        button.innerHTML = `${selectedStep} ❌`; // Cross for incorrect
+        setTimeout(() => {
+            showBrewingSteps(document.getElementById("coffee-title").innerText.includes("Капучино") ? "cappuccino" : "americano");
+        }, 1500);
     }
 }
 
-// Play success sound
-function playSuccessSound() {
-    const sound = document.getElementById("success-sound");
-    sound.play();
+// Function to restart the game
+function startOver() {
+    document.getElementById("brewing-game").innerHTML = ""; // Clear brewing steps
+    document.getElementById("message").textContent = ""; // Clear message
+    document.getElementById("start-over").style.display = "none"; // Hide start over button
+    document.getElementById("brewing-steps").style.display = "none"; // Hide brewing steps
 }
+
+
+
+
+
+
+
+// Call this function to start the game
+
+
+
+
+
+
+
+
 
 // Coffee Beans Catcher Game
 let score = 0;
@@ -420,6 +633,15 @@ function startGame() {
 function stopGame() {
     clearInterval(beanInterval);
 }
+setTimeout(() => {
+    document.getElementById('greeting').style.opacity = '0';
+    setTimeout(() => {
+        document.getElementById('greeting').style.display = 'none';
+        document.getElementById('main-content').style.display = 'block';
+        document.getElementById('main-logo').style.display = 'block'; // Show the second logo
+    }, 1000); // Wait for fade-out transition
+}, 3000);
+
 </script>
 
 </body>
